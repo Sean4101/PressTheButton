@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class MessageManager : MonoBehaviour
 {
+    [SerializeField] private GameManager gameManager;
     // Other scripts can access these variables to read the latest values.
     public int variableResistorValue;
     public int accelerometerValue;
@@ -20,7 +21,15 @@ public class MessageManager : MonoBehaviour
             return;
 
         char command = msg[0];
-
+        if (msg == "2!")
+        {
+            // pic actually received command
+            gameManager.MotorIsOn = true;
+        }
+        if (msg == "1!")
+        {
+            gameManager.MotorIsOn = false;
+        }
         switch (command)
         {
             case 'A':
@@ -42,6 +51,8 @@ public class MessageManager : MonoBehaviour
         msg = msg.Substring(1);
         int.TryParse(msg, out variableResistorValue);
         varResText.text = "Variable Resistor: " + variableResistorValue;
+
+        gameManager.UseVariableResistor();
     }
 
     public void UpdateAccelerometerValues(string msg)
@@ -49,6 +60,8 @@ public class MessageManager : MonoBehaviour
         msg = msg.Substring(1);
         int.TryParse(msg, out accelerometerValue);
         accelText.text = "Accelerometer: " + accelerometerValue;
+
+        gameManager.UseAcceleroMeter();
     }
 
 
@@ -56,5 +69,6 @@ public class MessageManager : MonoBehaviour
     public void ButtonPressed()
     {
         Debug.Log("Button pressed!");
+        gameManager.PressButton();
     }
 }
